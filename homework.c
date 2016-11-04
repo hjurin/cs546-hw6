@@ -1,23 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <math.h>
-#include <sys/types.h>
-#include <sys/times.h>
-#include <sys/time.h>
-#include <time.h>
-#include <sys/stat.h>
-#include <mpi.h>
-
-/* Program Parameters */
-#define MAXN 2000  /* Max value of N */
-char RANK_FILENAME[100]; /* File to output ranks of processes */
-char TIME_FILENAME[100]; /* File to output the resulting times */
-int MB_PER_RANK;
-
-// to be used to store process informations
-int rank, size;
+#include "homework.h"
 
 // /* output the resulting time to TIME_FILE and to the output stream */
 // void print_time() {
@@ -60,6 +41,8 @@ void parameters(int argc, char **argv) {
     }
 }
 
+
+
 int main(int argc, char **argv) {
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -82,8 +65,9 @@ int main(int argc, char **argv) {
         etstart2 = times(&cputstart);
     }
 
-    /* Workload */
-    
+    first_part();
+
+    second_part();
 
     /* Stop Clock */
     if (rank == 0) {
@@ -113,4 +97,13 @@ int main(int argc, char **argv) {
 
     MPI_Finalize();
     exit(0);
+}
+
+void first_part() {
+
+
+}
+
+void second_part() {
+
 }

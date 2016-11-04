@@ -3,10 +3,12 @@ MPICC=mpicc
 CFLAGS=-Wall
 MPICCFLAGS=$(CFLAGS)
 
+SRC=homework.c
+
 .PHONY: default all clean mrproper strats
 
 default:
-	$(MPICC) $(MPICCFLAGS) first.c
+	$(MPICC) $(MPICCFLAGS) $(SRC)
 
 mrproper:
 	rm -rf a.out
