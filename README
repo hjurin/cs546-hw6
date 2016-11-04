@@ -1,0 +1,46 @@
+***********************************************
+* CS546 - Parallel and distributed processing *
+* Homework 2                                  *
+* Victor SAINT GUILHEM              A20385526 *
+***********************************************
+
+This repository contains all the source code for parallelizing the resolution AX+B.
+It also contains all tests and tests results.
+All files are described at the bottom of this README.
+
+# BUILD AND RUN
+
+A Makefile has been implemented with following commands:
+    (default) build all solutions
+    mrproper delete all executables, parasite files and test results
+
+# LAUNCH TESTS
+
+Tests should have the right execution rights, if not, just tap
+    chmod +x *.sh
+These test simply launch the solution over different sized matrix (size 10 to size 1000 with step 10)
+and store their result elapsed times in elapsed_times.csv
+/!\ the test test_pthread.sh requires an argument (1, 2 or 3 depending on the method to test)
+
+# OUPUTS
+
+Each execution of solutions will write outputs in output_files directory.
+If no filename is given in paramter, the default filename is HH_MM_SS_program.txt
+If programs are launched through tests, the output are hidden.
+
+# FILES DESCRIPTION
+
+In all files, print_time() has been added.
+It outputs the elapsed time into the csv file.
+
+* gauss_normal  It is the original source code.
+    I added function to output in files and some global variables at the beginning.
+    Nothing significant has been edited here.
+* gauss_mpi1    MPI solution
+* gauss_pt1     First pthread solution
+* gauss_pt2     Second pthread solution
+* gauss_pt3     Third pthread solution
+
+* test_plotting.ipynb       Contains the jupyter-notebook for plotting elapsed times
+* resources                 Contains the plots of elapsed times
+* genuine_elapsed_times.csv The used csv file. It will not be erased if you run tests.
