@@ -124,7 +124,7 @@ void first_part() {
 
     MPI_CHECK(MPI_File_set_size(fh, 0));
 
-    MPI_CHECK(MPI_File_write_at(fh, offset, &rank, sizeof(int), MPI_INT, MPI_STATUS_IGNORE));
+    MPI_CHECK(MPI_File_write_at(fh, offset, &rank, 1, MPI_INT, MPI_STATUS_IGNORE));
 
     MPI_CHECK(MPI_File_close(&fh));
 }

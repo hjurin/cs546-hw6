@@ -14,12 +14,14 @@ build:
 	$(MPICC) $(MPICCFLAGS) $(SRC) -o $(EXEC)
 
 test: build
-	mpiexec -np 10 ./$(EXEC) rank_file.dat 1 time_file.dat
+	mpiexec -np 50 ./$(EXEC) rank_file.dat 1 time_file.dat
+
+print:
 	od -td -v rank_file.dat
 
 mrproper:
 	rm -rf $(EXEC)*
-	rm -rf *.txt
+	rm -rf *.dat
 	rm -rf a.out
 	rm -rf *~
 	rm -rf \#*
