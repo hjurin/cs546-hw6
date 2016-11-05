@@ -6,7 +6,7 @@ MPICCFLAGS=$(CFLAGS)
 SRC=homework.c
 EXEC=benchmark
 
-.PHONY: default
+.PHONY: default print
 
 default:
 	$(MPICC) $(MPICCFLAGS) $(SRC) -o $(EXEC)
@@ -16,6 +16,7 @@ print:
 
 mrproper:
 	rm -rf $(EXEC)*
+	rm -rf elapsed_times.csv
 	rm -rf *.dat
 	rm -rf a.out
 	rm -rf *~
