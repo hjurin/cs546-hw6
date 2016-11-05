@@ -4,17 +4,12 @@ CFLAGS=-Wall
 MPICCFLAGS=$(CFLAGS)
 
 SRC=homework.c
-EXEC=exec
+EXEC=benchmark
 
-.PHONY: default build
+.PHONY: default
 
-default: build
-
-build:
+default:
 	$(MPICC) $(MPICCFLAGS) $(SRC) -o $(EXEC)
-
-test: build
-	mpiexec -np 50 ./$(EXEC) rank_file.dat 1 time_file.dat
 
 print:
 	od -td -v rank_file.dat

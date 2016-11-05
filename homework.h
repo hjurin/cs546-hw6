@@ -24,8 +24,10 @@ int rank, size; // To be used to store process informations
 void print_time();
 /* Set the program parameters from the command-line arguments */
 void parameters(int argc, char **argv);
-void first_part();
-void second_part();
+void print_timing_results(double write_time, double read_time);
+void write_ranks();
+void write_data();
+void read_data();
 static void handle_error(int errcode, char *str);
 
 #define MPI_CHECK(fn) { int errcode; errcode = (fn); \
