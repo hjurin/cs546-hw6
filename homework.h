@@ -26,5 +26,8 @@ void print_time();
 void parameters(int argc, char **argv);
 void first_part();
 void second_part();
+static void handle_error(int errcode, char *str);
 
+#define MPI_CHECK(fn) { int errcode; errcode = (fn); \
+    if (errcode != MPI_SUCCESS) handle_error(errcode, #fn ); }
 #endif

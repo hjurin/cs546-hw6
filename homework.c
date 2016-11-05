@@ -41,12 +41,25 @@ void parameters(int argc, char **argv) {
     }
 }
 
+/* Error handler */
+static void handle_error(int errcode, char *str)
+{
+    char msg[MPI_MAX_ERROR_STRING];
+    int resultlen;
+    MPI_Error_string(errcode, msg, &resultlen);
+    fprintf(stderr, "%s: %s\n", str, msg);
+    /* Aborting on error might be too aggressive.  If
+    * you're sure you can
+    * continue after an error, comment or remove
+    * the following line */
+    MPI_Abort(MPI_COMM_WORLD, 1);
+}
 
 
 int main(int argc, char **argv) {
-    MPI_Init(&argc, &argv);
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    MPI_Comm_size(MPI_COMM_WORLD, &size);
+    MPI_CHECK(MPI_Init(&argc, &argv));
+    MPI_CHECK(MPI_Comm_rank(MPI_COMM_WORLD, &rank));
+    MPI_CHECK(MPI_Comm_size(MPI_COMM_WORLD, &size));
 
     /* Timing variables */
     struct timeval etstart, etstop;  /* Elapsed times using gettimeofday() */
@@ -67,7 +80,7 @@ int main(int argc, char **argv) {
 
     first_part();
 
-    second_part();
+    // second_part();
 
     /* Stop Clock */
     if (rank == 0) {
@@ -95,15 +108,63 @@ int main(int argc, char **argv) {
         printf("--------------------------------------------\n");
     }
 
-    MPI_Finalize();
+    MPI_CHECK(MPI_Finalize());
     exit(0);
 }
 
 void first_part() {
+    MPI_File fh;
+    MPI_Offset offset = rank * sizeof(int);
 
+    MPI_CHECK(MPI_File_open(MPI_COMM_WORLD,
+                            RANK_FILENAME,
+                            MPI_MODE_CREATE | MPI_MODE_RDWR,
+                            MPI_INFO_NULL,
+                            &fh));
 
+    MPI_CHECK(MPI_File_set_size(fh, 0));
+
+    MPI_CHECK(MPI_File_write_at(fh, offset, &rank, sizeof(int), MPI_INT, MPI_STATUS_IGNORE));
+
+    MPI_CHECK(MPI_File_close(&fh));
 }
 
-void second_part() {
+// void first_part() {
+//     MPI_File fh;
+//     char buf[20];
+//     sprintf(buf, "%d", rank);
+//     // sprintf(buf, "I am process %d\n", rank);
+//     MPI_Offset offset = rank * strlen(buf);
+//
+//     MPI_CHECK(MPI_File_open(MPI_COMM_WORLD,
+//                             RANK_FILENAME,
+//                             MPI_MODE_CREATE | MPI_MODE_RDWR,
+//                             MPI_INFO_NULL,
+//                             &fh));
+//
+//     MPI_CHECK(MPI_File_set_size(fh, 0));
+//
+//     MPI_CHECK(MPI_File_write_at(fh, offset, buf, strlen(buf), MPI_CHAR, MPI_STATUS_IGNORE));
+//
+//     MPI_CHECK(MPI_File_close(&fh));
+// }
 
+void second_part() {
+    int n = 10;
+    char buf[n];
+    int count;
+    long long nb_bytes;
+
+    MPI_Status status;
+    MPI_File fh;
+    MPI_Offset offset;
+    MPI_CHECK(MPI_File_open(MPI_COMM_WORLD, "test",
+                  MPI_MODE_RDONLY, MPI_INFO_NULL, &fh));
+    offset = rank;
+    MPI_CHECK(MPI_File_get_size(fh, &nb_bytes));
+    MPI_CHECK(MPI_File_read_at(fh, offset, buf, 1, MPI_CHAR, &status));
+    // MPI_CHECK(MPI_File_read(fh, buf, n, MPI_CHAR, &status));
+    MPI_CHECK(MPI_Get_count(&status, MPI_CHAR, &count));
+    printf("process %d read %d char : %c\n", rank, count, buf[0]);
+    MPI_CHECK(MPI_File_close(&fh));
 }
